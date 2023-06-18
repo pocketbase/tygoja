@@ -1,0 +1,7 @@
+{
+    "typedocOptions": {
+        "entryPoints": ["types.d.ts"],
+        "skipErrorChecking": true,
+        "out": "htmldocs"
+    }
+}
