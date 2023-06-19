@@ -2,6 +2,16 @@
 type _TygojaDict = { [key:string | number | symbol]: any; }
 type _TygojaAny = any
 declare var $app: c.Handler;
+namespace c {
+  interface Handler {(): string  }
+  interface Example2 {
+    Title: string
+  }
+  interface Example2 {
+    DemoEx2(): time.Time
+  }
+}
+
 /**
  * package a docs
  * lorem ipsum dolor...
@@ -54,8 +64,8 @@ namespace a {
   interface structA {
     Method2(arg1: number, ...arg2: string[]): void
   }
-  type _subnbNTq = unexported&structA
-  interface StructB<T> extends _subnbNTq {
+  type _subWTSqu = unexported&structA
+  interface StructB<T> extends _subWTSqu {
     Field3: T
   }
   interface StructB<T> {
@@ -69,25 +79,19 @@ namespace a {
  * package b
  */
 namespace b {
-  /**
-   * single comment
-   */
-  interface Func1 {(): void}
-  /**
-   * multi
-   * line
-   * comment
-   */
-  interface Func2<T> {(arg1: number): T}
-}
-
-namespace c {
-  interface Handler {(): string  }
-  interface Example2 {
-    Title: string
+  interface Func1 {
+    /**
+     * single comment
+     */
+    (): void
   }
-  interface Example2 {
-    DemoEx2(): time.Time
+  interface Func2<T> {
+    /**
+     * multi
+     * line
+     * comment
+     */
+    (arg1: number): T
   }
 }
 

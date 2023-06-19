@@ -41,11 +41,6 @@ func (g *PackageGenerator) writeFuncDecl(s *strings.Builder, decl *ast.FuncDecl,
 			g.markAsGenerated(originalMethodName)
 		}
 
-		// write package level function in the format "type FuncName = { (args): result }"
-		if decl.Doc != nil {
-			g.writeCommentGroup(s, decl.Doc, depth)
-		}
-
 		g.writeStartModifier(s, depth)
 		s.WriteString("interface ")
 		s.WriteString(methodName)
@@ -54,8 +49,14 @@ func (g *PackageGenerator) writeFuncDecl(s *strings.Builder, decl *ast.FuncDecl,
 			g.writeTypeParamsFields(s, decl.Type.TypeParams.List)
 		}
 
-		s.WriteString(" {")
+		s.WriteString(" {\n")
+		if decl.Doc != nil {
+			g.writeCommentGroup(s, decl.Doc, depth+1)
+		}
+		g.writeIndent(s, depth+1)
 		g.writeType(s, decl.Type, depth+1, false)
+		s.WriteString("\n")
+		g.writeIndent(s, depth)
 		s.WriteString("}\n")
 	} else if len(decl.Recv.List) == 1 {
 		// write struct method as new interface method
