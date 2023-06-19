@@ -43,7 +43,12 @@ func (g *PackageGenerator) writeFuncDecl(s *strings.Builder, decl *ast.FuncDecl,
 
 		g.writeStartModifier(s, depth)
 		s.WriteString("interface ")
-		s.WriteString(methodName)
+
+		if isReservedIdentifier(methodName) {
+			s.WriteString("_" + methodName)
+		} else {
+			s.WriteString(methodName)
+		}
 
 		if decl.Type.TypeParams != nil {
 			g.writeTypeParamsFields(s, decl.Type.TypeParams.List)
@@ -155,9 +160,10 @@ func (g *PackageGenerator) writeTypeSpec(s *strings.Builder, ts *ast.TypeSpec, g
 		g.markAsGenerated(typeName)
 	}
 
-	if ts.Doc != nil { // The spec has its own comment, which overrules the grouped comment.
+	if ts.Doc != nil {
+		// the spec has its own comment, which overrules the grouped comment
 		g.writeCommentGroup(s, ts.Doc, depth)
-	} else if group.isGroupedDeclaration {
+	} else {
 		g.writeCommentGroup(s, group.doc, depth)
 	}
 
@@ -323,6 +329,11 @@ func (g *PackageGenerator) writeValueSpec(s *strings.Builder, vs *ast.ValueSpec,
 			g.markAsGenerated(name.Name)
 		}
 
+		constName := name.Name
+		if isReservedIdentifier(constName) {
+			constName = "_" + constName
+		}
+
 		if vs.Doc != nil { // The spec has its own comment, which overrules the grouped comment.
 			g.writeCommentGroup(s, vs.Doc, depth)
 		} else if group.isGroupedDeclaration {
@@ -336,7 +347,8 @@ func (g *PackageGenerator) writeValueSpec(s *strings.Builder, vs *ast.ValueSpec,
 
 		g.writeStartModifier(s, depth)
 		s.WriteString("const ")
-		s.WriteString(name.Name)
+		s.WriteString(constName)
+
 		if vs.Type != nil {
 			s.WriteString(": ")
 

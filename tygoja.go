@@ -55,6 +55,10 @@ func (g *Tygoja) Generate() (string, error) {
 	if g.parent == nil {
 		s.WriteString("// GENERATED CODE - DO NOT MODIFY BY HAND\n")
 
+		if g.conf.Heading != "" {
+			s.WriteString(g.conf.Heading)
+		}
+
 		// write base types
 		// ---
 		s.WriteString("type ")
@@ -65,10 +69,6 @@ func (g *Tygoja) Generate() (string, error) {
 		s.WriteString(BaseTypeAny)
 		s.WriteString(" = any\n")
 		// ---
-
-		if g.conf.Heading != "" {
-			s.WriteString(g.conf.Heading)
-		}
 	}
 
 	for i, pkg := range pkgs {

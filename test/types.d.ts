@@ -1,9 +1,21 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
-type _TygojaDict = { [key:string | number | symbol]: any; }
+declare var $app: c.Handler;type _TygojaDict = { [key:string | number | symbol]: any; }
 type _TygojaAny = any
-declare var $app: c.Handler;
+
 namespace c {
-  interface Handler {(): string  }
+  /**
+   * func type comment
+   */
+  interface Handler {(): string  } // after
+  /**
+   * Example:
+   * 
+   * ```
+   * 	Some
+   * 	code
+   * 	sample
+   * ```
+   */
   interface Example2 {
     Title: string
   }
@@ -19,6 +31,9 @@ namespace c {
 namespace a {
   interface Empty {
   }
+  /**
+   * unexported interface
+   */
   interface interfaceA<T> {
     /**
      * some comment
@@ -36,6 +51,11 @@ namespace a {
     Method2(argA: string): [T, number]
     Method3(argA: number, ...argB: string[]): [T, Array<string>]
   }
+  /**
+   * multi
+   * line
+   * comment
+   */
   interface InterfaceB {
     /**
      * "replace" Method0 from interfaceA
@@ -46,6 +66,9 @@ namespace a {
   interface unexported {
     Field1: string
   }
+  /**
+   * structA comment
+   */
   interface structA {
     Field1: string // after
     /**
@@ -64,14 +87,25 @@ namespace a {
   interface structA {
     Method2(arg1: number, ...arg2: string[]): void
   }
-  type _subWTSqu = unexported&structA
-  interface StructB<T> extends _subWTSqu {
+  /**
+   * structB comment
+   */
+  type _subGNHxs = unexported&structA
+  interface StructB<T> extends _subGNHxs {
     Field3: T
   }
   interface StructB<T> {
     Method3(arg1: number): [number, string]
   }
+  /**
+   * type comment
+   */
   interface SliceAlias<T> extends Array<T>{} // after
+  /**
+   * multi
+   * line
+   * comment
+   */
   interface Handler<T> {(): [T, number]  } // after
 }
 
@@ -217,6 +251,51 @@ namespace time {
      */
     AppendFormat(b: string, layout: string): string
   }
+  /**
+   * A Time represents an instant in time with nanosecond precision.
+   * 
+   * Programs using times should typically store and pass them as values,
+   * not pointers. That is, time variables and struct fields should be of
+   * type time.Time, not *time.Time.
+   * 
+   * A Time value can be used by multiple goroutines simultaneously except
+   * that the methods GobDecode, UnmarshalBinary, UnmarshalJSON and
+   * UnmarshalText are not concurrency-safe.
+   * 
+   * Time instants can be compared using the Before, After, and Equal methods.
+   * The Sub method subtracts two instants, producing a Duration.
+   * The Add method adds a Time and a Duration, producing a Time.
+   * 
+   * The zero value of type Time is January 1, year 1, 00:00:00.000000000 UTC.
+   * As this time is unlikely to come up in practice, the IsZero method gives
+   * a simple way of detecting a time that has not been initialized explicitly.
+   * 
+   * Each Time has associated with it a Location, consulted when computing the
+   * presentation form of the time, such as in the Format, Hour, and Year methods.
+   * The methods Local, UTC, and In return a Time with a specific location.
+   * Changing the location in this way changes only the presentation; it does not
+   * change the instant in time being denoted and therefore does not affect the
+   * computations described in earlier paragraphs.
+   * 
+   * Representations of a Time value saved by the GobEncode, MarshalBinary,
+   * MarshalJSON, and MarshalText methods store the Time.Location's offset, but not
+   * the location name. They therefore lose information about Daylight Saving Time.
+   * 
+   * In addition to the required “wall clock” reading, a Time may contain an optional
+   * reading of the current process's monotonic clock, to provide additional precision
+   * for comparison or subtraction.
+   * See the “Monotonic Clocks” section in the package documentation for details.
+   * 
+   * Note that the Go == operator compares not just the time instant but also the
+   * Location and the monotonic clock reading. Therefore, Time values should not
+   * be used as map or database keys without first guaranteeing that the
+   * identical Location has been set for all values, which can be achieved
+   * through use of the UTC or Local method, and that the monotonic clock reading
+   * has been stripped by setting t = t.Round(0). In general, prefer t.Equal(u)
+   * to t == u, since t.Equal uses the most accurate comparison available and
+   * correctly handles the case when only one of its arguments has a monotonic
+   * clock reading.
+   */
   interface Time {
   }
   interface Time {
@@ -604,6 +683,9 @@ namespace time {
  * that difference will be visible when printing t.String() and u.String().
  */
 namespace time {
+  /**
+   * A Month specifies a month of the year (January = 1, ...).
+   */
   interface Month extends Number{}
   interface Month {
     /**
@@ -611,6 +693,9 @@ namespace time {
      */
     String(): string
   }
+  /**
+   * A Weekday specifies a day of the week (Sunday = 0, ...).
+   */
   interface Weekday extends Number{}
   interface Weekday {
     /**
@@ -618,6 +703,11 @@ namespace time {
      */
     String(): string
   }
+  /**
+   * A Duration represents the elapsed time between two instants
+   * as an int64 nanosecond count. The representation limits the
+   * largest representable duration to approximately 290 years.
+   */
   interface Duration extends Number{}
   interface Duration {
     /**
@@ -689,6 +779,12 @@ namespace time {
      */
     Abs(): Duration
   }
+  /**
+   * A Location maps time instants to the zone in use at that time.
+   * Typically, the Location represents the collection of time offsets
+   * in use in a geographical area. For many Locations the time offset varies
+   * depending on whether daylight savings time is in use at the time instant.
+   */
   interface Location {
   }
   interface Location {

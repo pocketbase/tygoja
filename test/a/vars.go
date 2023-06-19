@@ -38,7 +38,7 @@ const ConstA string = "test" // after
 // comment
 const ConstB = 123
 
-// some generic combined comment
+// some generic group comment
 const (
 	ConstC0 = iota
 	ConstC1 // after

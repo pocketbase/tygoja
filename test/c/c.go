@@ -2,7 +2,8 @@ package c
 
 import "time"
 
-type Handler func() string
+// func type comment
+type Handler func() string // after
 
 type Example1 struct {
 	Name string
