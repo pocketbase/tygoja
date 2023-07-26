@@ -99,12 +99,14 @@ func (g *PackageGenerator) writeType(s *strings.Builder, t ast.Expr, depth int, 
 
 		s.WriteString(v)
 	case *ast.SelectorExpr:
-		// e.g. `unsafe.Pointer`
+		// e.g. `unsafe.Pointer` or `unsafe.*`
 		fullType := fmt.Sprintf("%s.%s", t.X, t.Sel)
+		fullTypeWildcard := fmt.Sprintf("%s.*", t.X)
 
-		mappedType, ok := g.conf.TypeMappings[fullType]
-		if ok {
-			s.WriteString(mappedType)
+		if v, ok := g.conf.TypeMappings[fullType]; ok {
+			s.WriteString(v)
+		} else if v, ok := g.conf.TypeMappings[fullTypeWildcard]; ok {
+			s.WriteString(v)
 		} else {
 			g.unknownTypes[fullType] = struct{}{}
 			s.WriteString(fullType)
