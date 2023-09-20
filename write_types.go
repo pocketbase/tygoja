@@ -80,7 +80,7 @@ func (g *PackageGenerator) writeType(s *strings.Builder, t ast.Expr, depth int, 
 		} else {
 			// try to find a matching js equivalent
 			switch v {
-			case "[]byte", "byte", "rune", "string":
+			case "string":
 				v = "string"
 			case "bool":
 				v = "boolean"
@@ -88,8 +88,10 @@ func (g *PackageGenerator) writeType(s *strings.Builder, t ast.Expr, depth int, 
 				"uint", "uint8", "uint16", "uint32", "uint64",
 				"float32", "float64",
 				"complex64", "complex128",
-				"uintptr":
+				"uintptr", "byte", "rune":
 				v = "number"
+			case "[]byte":
+				v = "Array<number>"
 			case "error":
 				v = "Error"
 			default:
