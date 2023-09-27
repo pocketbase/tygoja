@@ -259,6 +259,12 @@ func (g *PackageGenerator) writeTypeSpec(s *strings.Builder, ts *ast.TypeSpec, g
 		}
 
 		s.WriteString(" {\n")
+
+		// fallback so that it doesn't report an error when attempting
+		// to access a field or method from a struct that implements the interface
+		g.writeIndent(s, depth+1)
+		s.WriteString("[key:string]: any;\n")
+
 		g.writeInterfaceFields(s, v.Methods.List, depth)
 		g.writeIndent(s, depth)
 		s.WriteString("}")

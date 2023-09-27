@@ -2,6 +2,26 @@
 declare var $app: c.Handler;type _TygojaDict = { [key:string | number | symbol]: any; }
 type _TygojaAny = any
 
+/**
+ * package b
+ */
+namespace b {
+  interface Func1 {
+    /**
+     * single comment
+     */
+    (): void
+  }
+  interface Func2<T> {
+    /**
+     * multi
+     * line
+     * comment
+     */
+    (arg1: number): T
+  }
+}
+
 namespace c {
   /**
    * func type comment
@@ -30,11 +50,13 @@ namespace c {
  */
 namespace a {
   interface Empty {
+    [key:string]: any;
   }
   /**
    * unexported interface
    */
   interface interfaceA<T> {
+    [key:string]: any;
     /**
      * some comment
      */
@@ -57,6 +79,7 @@ namespace a {
    * comment
    */
   interface InterfaceB {
+    [key:string]: any;
     /**
      * "replace" Method0 from interfaceA
      */
@@ -90,8 +113,8 @@ namespace a {
   /**
    * structB comment
    */
-  type _subGNHxs = unexported&structA
-  interface StructB<T> extends _subGNHxs {
+  type _subgdQPw = unexported&structA
+  interface StructB<T> extends _subgdQPw {
     Field3: T
   }
   interface StructB<T> {
@@ -110,32 +133,12 @@ namespace a {
 }
 
 /**
- * package b
- */
-namespace b {
-  interface Func1 {
-    /**
-     * single comment
-     */
-    (): void
-  }
-  interface Func2<T> {
-    /**
-     * multi
-     * line
-     * comment
-     */
-    (arg1: number): T
-  }
-}
-
-/**
  * Package time provides functionality for measuring and displaying time.
  * 
  * The calendrical calculations always assume a Gregorian calendar, with
  * no leap seconds.
  * 
- * # Monotonic Clocks
+ * Monotonic Clocks
  * 
  * Operating systems provide both a “wall clock,” which is subject to
  * changes for clock synchronization, and a “monotonic clock,” which is
@@ -194,10 +197,6 @@ namespace b {
  * t.UnmarshalJSON, and t.UnmarshalText always create times with
  * no monotonic clock reading.
  * 
- * The monotonic clock reading exists only in Time values. It is not
- * a part of Duration values or the Unix times returned by t.Unix and
- * friends.
- * 
  * Note that the Go == operator compares not just the time instant but
  * also the Location and the monotonic clock reading. See the
  * documentation for the Time type for a discussion of equality
@@ -211,7 +210,6 @@ namespace time {
   interface Time {
     /**
      * String returns the time formatted using the format string
-     * 
      * ```
      * 	"2006-01-02 15:04:05.999999999 -0700 MST"
      * ```
@@ -469,16 +467,6 @@ namespace time {
   }
   interface Time {
     /**
-     * ZoneBounds returns the bounds of the time zone in effect at time t.
-     * The zone begins at start and the next zone begins at end.
-     * If the zone begins at the beginning of time, start will be returned as a zero Time.
-     * If the zone goes on forever, end will be returned as a zero Time.
-     * The Location of the returned times will be the same as t.
-     */
-    ZoneBounds(): Time
-  }
-  interface Time {
-    /**
      * Unix returns t as a Unix time, the number of seconds elapsed
      * since January 1, 1970 UTC. The result does not depend on the
      * location associated with t.
@@ -610,7 +598,7 @@ namespace time {
  * The calendrical calculations always assume a Gregorian calendar, with
  * no leap seconds.
  * 
- * # Monotonic Clocks
+ * Monotonic Clocks
  * 
  * Operating systems provide both a “wall clock,” which is subject to
  * changes for clock synchronization, and a “monotonic clock,” which is
@@ -668,10 +656,6 @@ namespace time {
  * as well as the unmarshalers t.GobDecode, t.UnmarshalBinary.
  * t.UnmarshalJSON, and t.UnmarshalText always create times with
  * no monotonic clock reading.
- * 
- * The monotonic clock reading exists only in Time values. It is not
- * a part of Duration values or the Unix times returned by t.Unix and
- * friends.
  * 
  * Note that the Go == operator compares not just the time instant but
  * also the Location and the monotonic clock reading. See the
@@ -771,13 +755,6 @@ namespace time {
      * If m <= 0, Round returns d unchanged.
      */
     Round(m: Duration): Duration
-  }
-  interface Duration {
-    /**
-     * Abs returns the absolute value of d.
-     * As a special case, math.MinInt64 is converted to math.MaxInt64.
-     */
-    Abs(): Duration
   }
   /**
    * A Location maps time instants to the zone in use at that time.
