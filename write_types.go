@@ -58,8 +58,9 @@ func (g *PackageGenerator) writeType(s *strings.Builder, t ast.Expr, depth int, 
 		s.WriteString("[]")
 	case *ast.ArrayType:
 		if v, ok := t.Elt.(*ast.Ident); ok && v.String() == "byte" {
-			s.WriteString("string")
-			break
+			// union type with string since depending where it is used
+			// goja auto converts string to []byte if the field expect that
+			s.WriteString("string|")
 		}
 
 		s.WriteString("Array<")
@@ -90,8 +91,6 @@ func (g *PackageGenerator) writeType(s *strings.Builder, t ast.Expr, depth int, 
 				"complex64", "complex128",
 				"uintptr", "byte", "rune":
 				v = "number"
-			case "[]byte":
-				v = "Array<number>"
 			case "error":
 				v = "Error"
 			default:

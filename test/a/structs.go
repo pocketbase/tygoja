@@ -12,7 +12,8 @@ type structA struct {
 	// multi
 	// line
 	// comment
-	Field2 string
+	// with union type
+	Field2 []byte
 }
 
 func (s structA) method0() {}

@@ -3,48 +3,6 @@ declare var $app: c.Handler;type _TygojaDict = { [key:string | number | symbol]:
 type _TygojaAny = any
 
 /**
- * package b
- */
-namespace b {
-  interface Func1 {
-    /**
-     * single comment
-     */
-    (): void
-  }
-  interface Func2<T> {
-    /**
-     * multi
-     * line
-     * comment
-     */
-    (arg1: number): T
-  }
-}
-
-namespace c {
-  /**
-   * func type comment
-   */
-  interface Handler {(): string  } // after
-  /**
-   * Example:
-   * 
-   * ```
-   * 	Some
-   * 	code
-   * 	sample
-   * ```
-   */
-  interface Example2 {
-    Title: string
-  }
-  interface Example2 {
-    DemoEx2(): time.Time
-  }
-}
-
-/**
  * package a docs
  * lorem ipsum dolor...
  */
@@ -98,8 +56,9 @@ namespace a {
      * multi
      * line
      * comment
+     * with union type
      */
-    Field2: string
+    Field2: string|Array<number>
   }
   interface structA {
     /**
@@ -113,8 +72,8 @@ namespace a {
   /**
    * structB comment
    */
-  type _subgdQPw = unexported&structA
-  interface StructB<T> extends _subgdQPw {
+  type _subOTPtV = unexported&structA
+  interface StructB<T> extends _subOTPtV {
     Field3: T
   }
   interface StructB<T> {
@@ -130,6 +89,48 @@ namespace a {
    * comment
    */
   interface Handler<T> {(): [T, number]  } // after
+}
+
+/**
+ * package b
+ */
+namespace b {
+  interface Func1 {
+    /**
+     * single comment
+     */
+    (): void
+  }
+  interface Func2<T> {
+    /**
+     * multi
+     * line
+     * comment
+     */
+    (arg1: number): T
+  }
+}
+
+namespace c {
+  /**
+   * func type comment
+   */
+  interface Handler {(): string  } // after
+  /**
+   * Example:
+   * 
+   * ```
+   * 	Some
+   * 	code
+   * 	sample
+   * ```
+   */
+  interface Example2 {
+    Title: string
+  }
+  interface Example2 {
+    DemoEx2(): time.Time
+  }
 }
 
 /**
@@ -247,7 +248,7 @@ namespace time {
      * AppendFormat is like Format but appends the textual
      * representation to b and returns the extended buffer.
      */
-    AppendFormat(b: string, layout: string): string
+    AppendFormat(b: string|Array<number>, layout: string): string|Array<number>
   }
   /**
    * A Time represents an instant in time with nanosecond precision.
@@ -511,53 +512,53 @@ namespace time {
     /**
      * MarshalBinary implements the encoding.BinaryMarshaler interface.
      */
-    MarshalBinary(): string
+    MarshalBinary(): string|Array<number>
   }
   interface Time {
     /**
      * UnmarshalBinary implements the encoding.BinaryUnmarshaler interface.
      */
-    UnmarshalBinary(data: string): void
+    UnmarshalBinary(data: string|Array<number>): void
   }
   interface Time {
     /**
      * GobEncode implements the gob.GobEncoder interface.
      */
-    GobEncode(): string
+    GobEncode(): string|Array<number>
   }
   interface Time {
     /**
      * GobDecode implements the gob.GobDecoder interface.
      */
-    GobDecode(data: string): void
+    GobDecode(data: string|Array<number>): void
   }
   interface Time {
     /**
      * MarshalJSON implements the json.Marshaler interface.
      * The time is a quoted string in RFC 3339 format, with sub-second precision added if present.
      */
-    MarshalJSON(): string
+    MarshalJSON(): string|Array<number>
   }
   interface Time {
     /**
      * UnmarshalJSON implements the json.Unmarshaler interface.
      * The time is expected to be a quoted string in RFC 3339 format.
      */
-    UnmarshalJSON(data: string): void
+    UnmarshalJSON(data: string|Array<number>): void
   }
   interface Time {
     /**
      * MarshalText implements the encoding.TextMarshaler interface.
      * The time is formatted in RFC 3339 format, with sub-second precision added if present.
      */
-    MarshalText(): string
+    MarshalText(): string|Array<number>
   }
   interface Time {
     /**
      * UnmarshalText implements the encoding.TextUnmarshaler interface.
      * The time is expected to be in RFC 3339 format.
      */
-    UnmarshalText(data: string): void
+    UnmarshalText(data: string|Array<number>): void
   }
   interface Time {
     /**
