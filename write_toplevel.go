@@ -59,7 +59,7 @@ func (g *PackageGenerator) writeFuncDecl(s *strings.Builder, decl *ast.FuncDecl,
 			g.writeCommentGroup(s, decl.Doc, depth+1)
 		}
 		g.writeIndent(s, depth+1)
-		g.writeType(s, decl.Type, depth+1, false)
+		g.writeType(s, decl.Type, depth+1)
 		s.WriteString("\n")
 		g.writeIndent(s, depth)
 		s.WriteString("}\n")
@@ -92,7 +92,7 @@ func (g *PackageGenerator) writeFuncDecl(s *strings.Builder, decl *ast.FuncDecl,
 		g.writeStartModifier(s, depth)
 		s.WriteString("interface ")
 
-		g.writeType(s, recvType, depth, false)
+		g.writeType(s, recvType, depth)
 
 		s.WriteString(" {\n")
 		if decl.Doc != nil {
@@ -100,7 +100,7 @@ func (g *PackageGenerator) writeFuncDecl(s *strings.Builder, decl *ast.FuncDecl,
 		}
 		g.writeIndent(s, depth+1)
 		s.WriteString(methodName)
-		g.writeType(s, decl.Type, depth+1, false)
+		g.writeType(s, decl.Type, depth+1)
 		s.WriteString("\n")
 		g.writeIndent(s, depth)
 		s.WriteString("}\n")
@@ -203,7 +203,7 @@ func (g *PackageGenerator) writeTypeSpec(s *strings.Builder, ts *ast.TypeSpec, g
 					}
 
 					identSB.Reset()
-					g.writeType(identSB, typ, depth, true)
+					g.writeType(identSB, typ, depth, optionParenthesis, optionExtends)
 					ident := identSB.String()
 
 					if idx := strings.Index(ident, "<"); idx > 1 { // has at least 2 characters for <>
@@ -289,11 +289,11 @@ func (g *PackageGenerator) writeTypeSpec(s *strings.Builder, ts *ast.TypeSpec, g
 
 		var baseType string
 		subSB := new(strings.Builder)
-		g.writeType(subSB, ts.Type, depth, true)
+		g.writeType(subSB, ts.Type, depth, optionExtends)
 		switch baseType = subSB.String(); baseType {
 		// primitives can't be extended so we use their Object equivivalents
 		case "number", "string", "boolean":
-			baseType = strings.Title(baseType)
+			baseType = strings.ToUpper(string(baseType[0])) + baseType[1:]
 		case "any":
 			baseType = BaseTypeAny
 		}
@@ -359,7 +359,7 @@ func (g *PackageGenerator) writeValueSpec(s *strings.Builder, vs *ast.ValueSpec,
 			s.WriteString(": ")
 
 			tempSB := &strings.Builder{}
-			g.writeType(tempSB, vs.Type, depth, true)
+			g.writeType(tempSB, vs.Type, depth, optionParenthesis)
 			typeString := tempSB.String()
 
 			s.WriteString(typeString)
@@ -374,7 +374,7 @@ func (g *PackageGenerator) writeValueSpec(s *strings.Builder, vs *ast.ValueSpec,
 		if hasExplicitValue {
 			val := vs.Values[i]
 			tempSB := &strings.Builder{}
-			g.writeType(tempSB, val, depth, true)
+			g.writeType(tempSB, val, depth, optionParenthesis)
 
 			valueString := tempSB.String()
 			if isProbablyIotaType(valueString) {

@@ -10,6 +10,13 @@ import (
 	"go/token"
 )
 
+// Options for the writeType() method that can be used for extra context
+// to determine the format of the return type.
+const (
+	optionExtends     = "extends"
+	optionParenthesis = "parenthesis"
+)
+
 func (g *PackageGenerator) writeIndent(s *strings.Builder, depth int) {
 	for i := 0; i < depth; i++ {
 		s.WriteString(g.conf.Indent)
@@ -25,15 +32,21 @@ func (g *PackageGenerator) writeStartModifier(s *strings.Builder, depth int) {
 	}
 }
 
-func (g *PackageGenerator) writeType(s *strings.Builder, t ast.Expr, depth int, optionalParensOrReturnAsProp bool) {
+func (g *PackageGenerator) writeType(s *strings.Builder, t ast.Expr, depth int, options ...string) {
 	switch t := t.(type) {
 	case *ast.StarExpr:
-		if optionalParensOrReturnAsProp {
+		if hasOption(optionParenthesis, options) {
 			s.WriteByte('(')
 		}
-		g.writeType(s, t.X, depth, false)
-		s.WriteString(" | undefined")
-		if optionalParensOrReturnAsProp {
+
+		g.writeType(s, t.X, depth)
+
+		// allow undefined union only when not used in a extend expression
+		if !hasOption(optionExtends, options) {
+			s.WriteString(" | undefined")
+		}
+
+		if hasOption(optionParenthesis, options) {
 			s.WriteByte(')')
 		}
 	case *ast.Ellipsis:
@@ -49,7 +62,7 @@ func (g *PackageGenerator) writeType(s *strings.Builder, t ast.Expr, depth int, 
 			s.WriteString("(")
 		}
 
-		g.writeType(s, t.Elt, depth, true)
+		g.writeType(s, t.Elt, depth, optionParenthesis)
 
 		if isFunc {
 			s.WriteString(")")
@@ -57,14 +70,14 @@ func (g *PackageGenerator) writeType(s *strings.Builder, t ast.Expr, depth int, 
 
 		s.WriteString("[]")
 	case *ast.ArrayType:
-		if v, ok := t.Elt.(*ast.Ident); ok && v.String() == "byte" {
+		if v, ok := t.Elt.(*ast.Ident); ok && v.String() == "byte" && !hasOption(optionExtends, options) {
 			// union type with string since depending where it is used
 			// goja auto converts string to []byte if the field expect that
 			s.WriteString("string|")
 		}
 
 		s.WriteString("Array<")
-		g.writeType(s, t.Elt, depth, true)
+		g.writeType(s, t.Elt, depth, optionParenthesis)
 		s.WriteString(">")
 	case *ast.StructType:
 		s.WriteString("{\n")
@@ -118,44 +131,44 @@ func (g *PackageGenerator) writeType(s *strings.Builder, t ast.Expr, depth int, 
 		s.WriteString(t.Value)
 	case *ast.ParenExpr:
 		s.WriteByte('(')
-		g.writeType(s, t.X, depth, false)
+		g.writeType(s, t.X, depth)
 		s.WriteByte(')')
 	case *ast.BinaryExpr:
-		g.writeType(s, t.X, depth, false)
+		g.writeType(s, t.X, depth)
 		s.WriteByte(' ')
 		s.WriteString(t.Op.String())
 		s.WriteByte(' ')
-		g.writeType(s, t.Y, depth, false)
+		g.writeType(s, t.Y, depth)
 	case *ast.InterfaceType:
 		s.WriteString("{\n")
 		g.writeInterfaceFields(s, t.Methods.List, depth)
 		g.writeIndent(s, depth+1)
 		s.WriteByte('}')
 	case *ast.FuncType:
-		g.writeFuncType(s, t, depth, optionalParensOrReturnAsProp)
+		g.writeFuncType(s, t, depth, false)
 	case *ast.UnaryExpr:
 		if t.Op == token.TILDE {
 			// we just ignore the tilde token, in Typescript extended types are
 			// put into the generic typing itself, which we can't support yet.
-			g.writeType(s, t.X, depth, false)
+			g.writeType(s, t.X, depth)
 		} else {
 			// only log for now
 			log.Printf("unhandled unary expr: %v\n %T\n", t, t)
 		}
 	case *ast.IndexListExpr:
-		g.writeType(s, t.X, depth, false)
+		g.writeType(s, t.X, depth)
 		s.WriteByte('<')
 		for i, index := range t.Indices {
-			g.writeType(s, index, depth, false)
+			g.writeType(s, index, depth)
 			if i != len(t.Indices)-1 {
 				s.WriteString(", ")
 			}
 		}
 		s.WriteByte('>')
 	case *ast.IndexExpr:
-		g.writeType(s, t.X, depth, false)
+		g.writeType(s, t.X, depth)
 		s.WriteByte('<')
-		g.writeType(s, t.Index, depth, false)
+		g.writeType(s, t.Index, depth)
 		s.WriteByte('>')
 	case *ast.CallExpr, *ast.ChanType, *ast.CompositeLit:
 		s.WriteString("undefined")
@@ -200,7 +213,7 @@ func (g *PackageGenerator) writeInterfaceFields(s *strings.Builder, fields []*as
 
 		g.writeIndent(s, depth+1)
 		s.WriteString(methodName)
-		g.writeType(s, f.Type, depth, false)
+		g.writeType(s, f.Type, depth)
 
 		if f.Comment != nil {
 			s.WriteString(" // ")
@@ -245,7 +258,7 @@ func (g *PackageGenerator) writeStructFields(s *strings.Builder, fields []*ast.F
 		}
 
 		s.WriteString(": ")
-		g.writeType(s, f.Type, depth, true)
+		g.writeType(s, f.Type, depth, optionParenthesis)
 
 		if f.Comment != nil {
 			// Line comment is present, that means a comment after the field.
@@ -286,14 +299,14 @@ func (g *PackageGenerator) writeFuncType(s *strings.Builder, t *ast.FuncType, de
 		}
 
 		if len(t.Results.List) == 1 {
-			g.writeType(s, t.Results.List[0].Type, 0, true)
+			g.writeType(s, t.Results.List[0].Type, 0, optionParenthesis)
 		} else if len(t.Results.List) > 1 {
 			s.WriteRune('[')
 			for i, f := range t.Results.List {
 				if i > 0 {
 					s.WriteString(", ")
 				}
-				g.writeType(s, f.Type, 0, true)
+				g.writeType(s, f.Type, 0, optionParenthesis)
 			}
 			s.WriteRune(']')
 		} else {
@@ -332,7 +345,7 @@ func (g *PackageGenerator) writeFuncParams(s *strings.Builder, params []*ast.Fie
 
 		s.WriteString(": ")
 
-		g.writeType(s, f.Type, depth, true)
+		g.writeType(s, f.Type, depth, optionParenthesis)
 
 		if f.Comment != nil {
 			// Line comment is present, that means a comment after the field.
@@ -398,4 +411,14 @@ var isValidJSNameRegexp = regexp.MustCompile(`(?m)^[\pL_][\pL\pN_]*$`)
 
 func isValidJSName(name string) bool {
 	return isReservedIdentifier(name) || isValidJSNameRegexp.MatchString(name)
+}
+
+func hasOption(opt string, options []string) bool {
+	for _, o := range options {
+		if o == opt {
+			return true
+		}
+	}
+
+	return false
 }

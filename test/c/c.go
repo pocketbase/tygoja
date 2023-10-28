@@ -5,6 +5,8 @@ import "time"
 // func type comment
 type Handler func() string // after
 
+type Raw []byte
+
 type Example1 struct {
 	Name string
 }
@@ -16,6 +18,8 @@ type Example1 struct {
 //	sample
 type Example2 struct {
 	Title string
+	Json  Raw
+	Bytes []byte // should be union
 }
 
 func (e *Example1) DemoEx1() string {
