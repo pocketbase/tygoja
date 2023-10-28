@@ -12,3 +12,8 @@ func Func1() {}
 func Func2[T any](arg1 int) (a T, b error) {
 	return
 }
+
+// function that returns a function
+func Func3(arg1 int) (a func() int) {
+	return a
+}

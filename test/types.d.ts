@@ -72,8 +72,8 @@ namespace a {
   /**
    * structB comment
    */
-  type _subVIhys = unexported&structA
-  interface StructB<T> extends _subVIhys {
+  type _subhgpbH = unexported&structA
+  interface StructB<T> extends _subhgpbH {
     Field3: T
   }
   interface StructB<T> {
@@ -108,6 +108,12 @@ namespace b {
      * comment
      */
     (arg1: number): T
+  }
+  interface Func3 {
+    /**
+     * function that returns a function
+     */
+    (arg1: number): () => number
   }
 }
 

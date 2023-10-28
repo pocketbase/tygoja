@@ -289,7 +289,7 @@ func (g *PackageGenerator) writeTypeSpec(s *strings.Builder, ts *ast.TypeSpec, g
 
 		var baseType string
 		subSB := new(strings.Builder)
-		g.writeType(subSB, ts.Type, depth, optionExtends)
+		g.writeType(subSB, ts.Type, depth, optionParenthesis, optionExtends)
 		switch baseType = subSB.String(); baseType {
 		// primitives can't be extended so we use their Object equivivalents
 		case "number", "string", "boolean":

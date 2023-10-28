@@ -145,7 +145,7 @@ func (g *PackageGenerator) writeType(s *strings.Builder, t ast.Expr, depth int, 
 		g.writeIndent(s, depth+1)
 		s.WriteByte('}')
 	case *ast.FuncType:
-		g.writeFuncType(s, t, depth, false)
+		g.writeFuncType(s, t, depth, hasOption(optionParenthesis, options))
 	case *ast.UnaryExpr:
 		if t.Op == token.TILDE {
 			// we just ignore the tilde token, in Typescript extended types are
