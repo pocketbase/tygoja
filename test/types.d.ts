@@ -72,8 +72,8 @@ namespace a {
   /**
    * structB comment
    */
-  type _subhgpbH = unexported&structA
-  interface StructB<T> extends _subhgpbH {
+  type _subHGRbk = unexported&structA
+  interface StructB<T> extends _subHGRbk {
     Field3: T
   }
   interface StructB<T> {
@@ -138,6 +138,12 @@ namespace c {
   }
   interface Example2 {
     DemoEx2(): time.Time
+  }
+  interface Example2 {
+    /**
+     * Pointer as argument vs return type
+     */
+    DemoEx3(arg: Example1): (Example1)
   }
 }
 
@@ -470,7 +476,7 @@ namespace time {
     /**
      * Location returns the time zone information associated with t.
      */
-    Location(): (Location | undefined)
+    Location(): (Location)
   }
   interface Time {
     /**
@@ -618,6 +624,12 @@ namespace time {
 
 namespace c {
   interface Raw extends Array<number>{}
+  interface Example1 {
+    Name: string
+  }
+  interface Example1 {
+    DemoEx1(): string
+  }
 }
 
 /**

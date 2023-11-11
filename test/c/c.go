@@ -29,3 +29,8 @@ func (e *Example1) DemoEx1() string {
 func (e *Example2) DemoEx2() time.Time {
 	return time.Time{}
 }
+
+// Pointer as argument vs return type
+func (e *Example2) DemoEx3(arg *Example1) (*Example1, error) {
+	return nil, nil
+}

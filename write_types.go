@@ -13,8 +13,9 @@ import (
 // Options for the writeType() method that can be used for extra context
 // to determine the format of the return type.
 const (
-	optionExtends     = "extends"
-	optionParenthesis = "parenthesis"
+	optionExtends        = "extends"
+	optionParenthesis    = "parenthesis"
+	optionFunctionReturn = "func_return"
 )
 
 func (g *PackageGenerator) writeIndent(s *strings.Builder, depth int) {
@@ -41,8 +42,8 @@ func (g *PackageGenerator) writeType(s *strings.Builder, t ast.Expr, depth int, 
 
 		g.writeType(s, t.X, depth)
 
-		// allow undefined union only when not used in a extend expression
-		if !hasOption(optionExtends, options) {
+		// allow undefined union only when not used in an "extends" expression or as return type
+		if !hasOption(optionExtends, options) && !hasOption(optionFunctionReturn, options) {
 			s.WriteString(" | undefined")
 		}
 
@@ -299,14 +300,14 @@ func (g *PackageGenerator) writeFuncType(s *strings.Builder, t *ast.FuncType, de
 		}
 
 		if len(t.Results.List) == 1 {
-			g.writeType(s, t.Results.List[0].Type, 0, optionParenthesis)
+			g.writeType(s, t.Results.List[0].Type, 0, optionParenthesis, optionFunctionReturn)
 		} else if len(t.Results.List) > 1 {
 			s.WriteRune('[')
 			for i, f := range t.Results.List {
 				if i > 0 {
 					s.WriteString(", ")
 				}
-				g.writeType(s, f.Type, 0, optionParenthesis)
+				g.writeType(s, f.Type, 0, optionParenthesis, optionFunctionReturn)
 			}
 			s.WriteRune(']')
 		} else {
