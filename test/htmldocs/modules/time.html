@@ -48,7 +48,7 @@ Because t.In, t.Local, and t.UTC are used for their effect on the interpretation
 of the wall time, they also strip any monotonic clock reading from their results.
 The canonical way to strip a monotonic clock reading is to use t = t.Round(0).</p>
 <p>If Times t and u both contain monotonic clock readings, the operations
-t.After(u), t.Before(u), t.Equal(u), and t.Sub(u) are carried out
+t.After(u), t.Before(u), t.Equal(u), t.Compare(u), and t.Sub(u) are carried out
 using the monotonic clock readings alone, ignoring the wall clock
 readings. If either t or u contains no monotonic clock reading, these
 operations fall back to using the wall clock readings.</p>
@@ -76,8 +76,8 @@ that difference will be visible when printing t.String() and u.String().</p>
 </div>
 <div class="tsd-comment tsd-typography"></div></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/pocketbase/tygoja/blob/6a8a88a/test/types.d.ts#L210">types.d.ts:210</a></li>
-<li>Defined in <a href="https://github.com/pocketbase/tygoja/blob/6a8a88a/test/types.d.ts#L685">types.d.ts:685</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/pocketbase/tygoja/blob/5420517/test/types.d.ts#L258">types.d.ts:258</a></li>
+<li>Defined in <a href="https://github.com/pocketbase/tygoja/blob/5420517/test/types.d.ts#L754">types.d.ts:754</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <h3 class="tsd-index-heading uppercase">Index</h3>

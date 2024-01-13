@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "generate": "npx typedoc"
+  },
   "devDependencies": {
     "typedoc": "^0.24.8"
   }

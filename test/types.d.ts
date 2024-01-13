@@ -28,7 +28,7 @@ namespace a {
      * line
      * comment
      */
-    Method2(argA: string): [T, number]
+    Method2(argA: string, argB: string): [T, number]
     Method3(argA: number, ...argB: string[]): [T, Array<string>]
   }
   /**
@@ -72,8 +72,8 @@ namespace a {
   /**
    * structB comment
    */
-  type _subHGRbk = unexported&structA
-  interface StructB<T> extends _subHGRbk {
+  type _subakXgn = unexported&structA
+  interface StructB<T> extends _subakXgn {
     Field3: T
   }
   interface StructB<T> {
@@ -115,6 +115,24 @@ namespace b {
      */
     (arg1: number): () => number
   }
+  interface Func4 {
+    /**
+     * function with ommited argument types
+     */
+    (arg0: string, arg1: number, arg2: number): void
+  }
+  interface Func5 {
+    /**
+     * function with reserved argument name and variadic type
+     */
+    (_arg00: string, ...optional: string[]): void
+  }
+  interface Func6 {
+    /**
+     * function with ommited argument names
+     */
+    (_arg0: string, _arg1: number, ..._arg2: boolean[]): void
+  }
 }
 
 namespace c {
@@ -144,6 +162,18 @@ namespace c {
      * Pointer as argument vs return type
      */
     DemoEx3(arg: Example1): (Example1)
+  }
+  interface Example2 {
+    /**
+     * ommited types
+     */
+    DemoEx4(n1: string, n2: string, n3: string): void
+  }
+  interface Example2 {
+    /**
+     * ommited names
+     */
+    DemoEx5(_arg0: string, _arg1: number): void
   }
 }
 
@@ -194,7 +224,7 @@ namespace c {
  * The canonical way to strip a monotonic clock reading is to use t = t.Round(0).
  * 
  * If Times t and u both contain monotonic clock readings, the operations
- * t.After(u), t.Before(u), t.Equal(u), and t.Sub(u) are carried out
+ * t.After(u), t.Before(u), t.Equal(u), t.Compare(u), and t.Sub(u) are carried out
  * using the monotonic clock readings alone, ignoring the wall clock
  * readings. If either t or u contains no monotonic clock reading, these
  * operations fall back to using the wall clock readings.
@@ -327,6 +357,13 @@ namespace time {
      * Before reports whether the time instant t is before u.
      */
     Before(u: Time): boolean
+  }
+  interface Time {
+    /**
+     * Compare compares the time instant t with u. If t is before u, it returns -1;
+     * if t is after u, it returns +1; if they're the same, it returns 0.
+     */
+    Compare(u: Time): number
   }
   interface Time {
     /**
@@ -564,28 +601,32 @@ namespace time {
   interface Time {
     /**
      * MarshalJSON implements the json.Marshaler interface.
-     * The time is a quoted string in RFC 3339 format, with sub-second precision added if present.
+     * The time is a quoted string in the RFC 3339 format with sub-second precision.
+     * If the timestamp cannot be represented as valid RFC 3339
+     * (e.g., the year is out of range), then an error is reported.
      */
     MarshalJSON(): string|Array<number>
   }
   interface Time {
     /**
      * UnmarshalJSON implements the json.Unmarshaler interface.
-     * The time is expected to be a quoted string in RFC 3339 format.
+     * The time must be a quoted string in the RFC 3339 format.
      */
     UnmarshalJSON(data: string|Array<number>): void
   }
   interface Time {
     /**
      * MarshalText implements the encoding.TextMarshaler interface.
-     * The time is formatted in RFC 3339 format, with sub-second precision added if present.
+     * The time is formatted in RFC 3339 format with sub-second precision.
+     * If the timestamp cannot be represented as valid RFC 3339
+     * (e.g., the year is out of range), then an error is reported.
      */
     MarshalText(): string|Array<number>
   }
   interface Time {
     /**
      * UnmarshalText implements the encoding.TextUnmarshaler interface.
-     * The time is expected to be in RFC 3339 format.
+     * The time must be in the RFC 3339 format.
      */
     UnmarshalText(data: string|Array<number>): void
   }
@@ -679,7 +720,7 @@ namespace c {
  * The canonical way to strip a monotonic clock reading is to use t = t.Round(0).
  * 
  * If Times t and u both contain monotonic clock readings, the operations
- * t.After(u), t.Before(u), t.Equal(u), and t.Sub(u) are carried out
+ * t.After(u), t.Before(u), t.Equal(u), t.Compare(u), and t.Sub(u) are carried out
  * using the monotonic clock readings alone, ignoring the wall clock
  * readings. If either t or u contains no monotonic clock reading, these
  * operations fall back to using the wall clock readings.

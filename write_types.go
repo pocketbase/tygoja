@@ -318,41 +318,51 @@ func (g *PackageGenerator) writeFuncType(s *strings.Builder, t *ast.FuncType, de
 
 func (g *PackageGenerator) writeFuncParams(s *strings.Builder, params []*ast.Field, depth int) {
 	for i, f := range params {
-		var fieldName string
-		if len(f.Names) != 0 && f.Names[0] != nil && len(f.Names[0].Name) != 0 && !isReservedIdentifier(f.Names[0].Name) {
-			fieldName = f.Names[0].Name
-		} else {
-			fieldName = fmt.Sprintf("_arg%d", i)
+		// normalize params iteration
+		// (params with omitted types will be part of a single ast.Field but with different names)
+		names := make([]string, 0, len(f.Names))
+		for j, ident := range f.Names {
+			name := ident.Name
+			if name == "" || isReservedIdentifier(name) {
+				name = fmt.Sprintf("_arg%d%d", i, j)
+			}
+			names = append(names, name)
+		}
+		if len(names) == 0 {
+			// ommitted param name (eg. func(string))
+			names = append(names, fmt.Sprintf("_arg%d", i))
 		}
 
-		if i > 0 {
-			s.WriteString(", ")
-		}
+		for j, fieldName := range names {
+			if i > 0 || j > 0 {
+				s.WriteString(", ")
+			}
 
-		var isVariadic bool
+			var isVariadic bool
 
-		switch t := f.Type.(type) {
-		case *ast.StarExpr:
-			f.Type = t.X
-		case *ast.Ellipsis:
-			isVariadic = true
-		}
+			switch t := f.Type.(type) {
+			case *ast.StarExpr:
+				f.Type = t.X
+			case *ast.Ellipsis:
+				isVariadic = true
+			}
 
-		g.writeCommentGroup(s, f.Doc, depth+2)
-		if isVariadic {
-			s.WriteString("...")
-		}
-		s.WriteString(fieldName)
+			g.writeCommentGroup(s, f.Doc, depth+2)
+			if isVariadic {
+				s.WriteString("...")
+			}
+			s.WriteString(fieldName)
 
-		s.WriteString(": ")
+			s.WriteString(": ")
 
-		g.writeType(s, f.Type, depth, optionParenthesis)
+			g.writeType(s, f.Type, depth, optionParenthesis)
 
-		if f.Comment != nil {
-			// Line comment is present, that means a comment after the field.
-			s.WriteString(" /* ")
-			s.WriteString(f.Comment.Text())
-			s.WriteString(" */ ")
+			if f.Comment != nil {
+				// Line comment is present, that means a comment after the field.
+				s.WriteString(" /* ")
+				s.WriteString(f.Comment.Text())
+				s.WriteString(" */ ")
+			}
 		}
 	}
 }

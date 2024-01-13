@@ -34,3 +34,13 @@ func (e *Example2) DemoEx2() time.Time {
 func (e *Example2) DemoEx3(arg *Example1) (*Example1, error) {
 	return nil, nil
 }
+
+// ommited types
+func (e *Example2) DemoEx4(n1, n2, n3 string) {
+	return
+}
+
+// ommited names
+func (e *Example2) DemoEx5(string, int) {
+	return
+}
