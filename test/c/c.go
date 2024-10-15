@@ -37,10 +37,23 @@ func (e *Example2) DemoEx3(arg *Example1) (*Example1, error) {
 
 // ommited types
 func (e *Example2) DemoEx4(n1, n2, n3 string) {
-	return
 }
 
 // ommited names
 func (e *Example2) DemoEx5(string, int) {
+}
+
+// named return values
+func (e *Example2) DemoEx6() (b int, c string) {
+	return
+}
+
+// shortened return values
+func (e *Example2) DemoEx7() (b, c string) {
+	return
+}
+
+// named and shortened return values
+func (e *Example2) DemoEx8() (a int, b, c string) {
 	return
 }

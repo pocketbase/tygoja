@@ -299,19 +299,30 @@ func (g *PackageGenerator) writeFuncType(s *strings.Builder, t *ast.FuncType, de
 			t.Results.List = t.Results.List[:len(t.Results.List)-1]
 		}
 
-		if len(t.Results.List) == 1 {
-			g.writeType(s, t.Results.List[0].Type, 0, optionParenthesis, optionFunctionReturn)
-		} else if len(t.Results.List) > 1 {
-			s.WriteRune('[')
-			for i, f := range t.Results.List {
-				if i > 0 {
-					s.WriteString(", ")
-				}
-				g.writeType(s, f.Type, 0, optionParenthesis, optionFunctionReturn)
-			}
-			s.WriteRune(']')
-		} else {
+		if len(t.Results.List) == 0 {
 			s.WriteString("void")
+		} else {
+			// multiple and shortened return type values must be wrapped in []
+			// (combined/shortened return values from the same type are part of a single ast.Field but with different names)
+			hasMultipleReturnValues := len(t.Results.List) > 1 || len(t.Results.List[0].Names) > 1
+			if hasMultipleReturnValues {
+				s.WriteRune('[')
+			}
+
+			for i, f := range t.Results.List {
+				totalNames := max(len(f.Names), 1)
+				for j := range totalNames {
+					if i > 0 || j > 0 {
+						s.WriteString(", ")
+					}
+
+					g.writeType(s, f.Type, 0, optionParenthesis, optionFunctionReturn)
+				}
+			}
+
+			if hasMultipleReturnValues {
+				s.WriteRune(']')
+			}
 		}
 	}
 }
