@@ -187,7 +187,7 @@ func (g *PackageGenerator) writeTypeSpec(s *strings.Builder, ts *ast.TypeSpec, g
 			}
 
 			if len(embeds) > 0 {
-				extendTypeName = "_sub" + PseudorandomString(5)
+				extendTypeName = "_sub" + PseudorandomString(6)
 
 				genericArgs := map[string]struct{}{}
 				identSB := new(strings.Builder)

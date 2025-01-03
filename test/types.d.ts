@@ -72,8 +72,8 @@ namespace a {
   /**
    * structB comment
    */
-  type _subpJVrA = unexported&structA
-  interface StructB<T> extends _subpJVrA {
+  type _subUpqlrE = unexported&structA
+  interface StructB<T> extends _subUpqlrE {
     Field3: T
   }
   interface StructB<T> {
