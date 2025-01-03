@@ -31,6 +31,15 @@ type StructB[T any] struct {
 	Field3 T
 }
 
+// StructB.Method3 comment
 func (s *StructB[T]) Method3(arg1 int) (a int, b string, c error) {
 	return
+}
+
+
+// structC with multiple mixed generic types
+type StructC[A string, B, C any] struct {
+	Field4 A
+	Field5 B
+	Field6 C
 }

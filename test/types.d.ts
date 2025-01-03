@@ -72,12 +72,23 @@ namespace a {
   /**
    * structB comment
    */
-  type _subOLPog = unexported&structA
-  interface StructB<T> extends _subOLPog {
+  type _subpJVrA = unexported&structA
+  interface StructB<T> extends _subpJVrA {
     Field3: T
   }
   interface StructB<T> {
+    /**
+     * StructB.Method3 comment
+     */
     Method3(arg1: number): [number, string]
+  }
+  /**
+   * structC with multiple mixed generic types
+   */
+  interface StructC<A,B,C> {
+    Field4: A
+    Field5: B
+    Field6: C
   }
   /**
    * type comment
@@ -109,43 +120,49 @@ namespace b {
      */
     (arg1: number): T
   }
-  interface Func3 {
+  interface Func3<A,B,C> {
+    /**
+     * function with multiple generic types
+     */
+    (arg1: A, arg2: B, arg3: number): [A, C]
+  }
+  interface Func4 {
     /**
      * function that returns a function
      */
     (arg1: number): () => number
   }
-  interface Func4 {
+  interface Func5 {
     /**
      * function with ommited argument types
      */
     (arg0: string, arg1: number, arg2: number): void
   }
-  interface Func5 {
+  interface Func6 {
     /**
      * function with reserved argument name and variadic type
      */
     (_arg00: string, ...optional: string[]): void
   }
-  interface Func6 {
+  interface Func7 {
     /**
      * function with ommited argument names
      */
     (_arg0: string, _arg1: number, ..._arg2: boolean[]): void
   }
-  interface Func7 {
+  interface Func8 {
     /**
      * function with named return values
      */
     (): [number, string]
   }
-  interface Func8 {
+  interface Func9 {
     /**
      * function with shortened return values
      */
     (): [string, string]
   }
-  interface Func9 {
+  interface Func10 {
     /**
      * function with named and shortened return values
      */

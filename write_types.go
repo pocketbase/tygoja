@@ -179,10 +179,11 @@ func (g *PackageGenerator) writeType(s *strings.Builder, t ast.Expr, depth int, 
 }
 
 func (g *PackageGenerator) writeTypeParamsFields(s *strings.Builder, fields []*ast.Field) {
-	s.WriteByte('<')
+	// extract params
+	names := []string{}
 	for _, f := range fields {
 		for _, ident := range f.Names {
-			s.WriteString(ident.Name)
+			names = append(names, ident.Name)
 
 			// disable extends for now as it complicates the interfaces merge
 			//
@@ -193,6 +194,20 @@ func (g *PackageGenerator) writeTypeParamsFields(s *strings.Builder, fields []*a
 			// }
 		}
 	}
+
+	if len(names) == 0 {
+		return
+	}
+
+	s.WriteByte('<')
+
+	for i, name := range names {
+		if i > 0 {
+			s.WriteString(",")
+		}
+		s.WriteString(name)
+	}
+
 	s.WriteByte('>')
 }
 
