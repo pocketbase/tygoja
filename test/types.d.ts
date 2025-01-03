@@ -2,6 +2,66 @@
 declare var $app: c.Handler;type _TygojaDict = { [key:string | number | symbol]: any; }
 type _TygojaAny = any
 
+namespace c {
+  /**
+   * func type comment
+   */
+  interface Handler {(): string  } // after
+  /**
+   * Example:
+   * 
+   * ```
+   * 	Some
+   * 	code
+   * 	sample
+   * ```
+   */
+  interface Example2 {
+    Title: string
+    Json: Raw
+    Bytes: string|Array<number> // should be union
+  }
+  interface Example2 {
+    DemoEx2(): time.Time
+  }
+  interface Example2 {
+    /**
+     * Pointer as argument vs return type
+     */
+    DemoEx3(arg: Example1): (Example1)
+  }
+  interface Example2 {
+    /**
+     * ommited types
+     */
+    DemoEx4(n1: string, n2: string, n3: string): void
+  }
+  interface Example2 {
+    /**
+     * ommited names
+     */
+    DemoEx5(_arg0: string, _arg1: number): void
+  }
+  interface Example2 {
+    /**
+     * named return values
+     */
+    DemoEx6(): [number, string]
+  }
+  interface Example2 {
+    /**
+     * shortened return values
+     */
+    DemoEx7(): [string, string]
+  }
+  interface Example2 {
+    /**
+     * named and shortened return values
+     */
+    DemoEx8(): [number, string, string]
+  }
+}
+
 /**
  * package a docs
  * lorem ipsum dolor...
@@ -72,15 +132,9 @@ namespace a {
   /**
    * structB comment
    */
-  type _subUpqlrE = unexported&structA
-  interface StructB<T> extends _subUpqlrE {
+  type _sOZEzeB = unexported&structA
+  interface StructB<T> extends _sOZEzeB {
     Field3: T
-  }
-  interface StructB<T> {
-    /**
-     * StructB.Method3 comment
-     */
-    Method3(arg1: number): [number, string]
   }
   /**
    * structC with multiple mixed generic types
@@ -89,6 +143,12 @@ namespace a {
     Field4: A
     Field5: B
     Field6: C
+  }
+  interface StructC<A, B, C> {
+    /**
+     * StructC.Method4 comment
+     */
+    Method4(arg1: A): [B, C]
   }
   /**
    * type comment
@@ -167,66 +227,6 @@ namespace b {
      * function with named and shortened return values
      */
     (): [number, string, string]
-  }
-}
-
-namespace c {
-  /**
-   * func type comment
-   */
-  interface Handler {(): string  } // after
-  /**
-   * Example:
-   * 
-   * ```
-   * 	Some
-   * 	code
-   * 	sample
-   * ```
-   */
-  interface Example2 {
-    Title: string
-    Json: Raw
-    Bytes: string|Array<number> // should be union
-  }
-  interface Example2 {
-    DemoEx2(): time.Time
-  }
-  interface Example2 {
-    /**
-     * Pointer as argument vs return type
-     */
-    DemoEx3(arg: Example1): (Example1)
-  }
-  interface Example2 {
-    /**
-     * ommited types
-     */
-    DemoEx4(n1: string, n2: string, n3: string): void
-  }
-  interface Example2 {
-    /**
-     * ommited names
-     */
-    DemoEx5(_arg0: string, _arg1: number): void
-  }
-  interface Example2 {
-    /**
-     * named return values
-     */
-    DemoEx6(): [number, string]
-  }
-  interface Example2 {
-    /**
-     * shortened return values
-     */
-    DemoEx7(): [string, string]
-  }
-  interface Example2 {
-    /**
-     * named and shortened return values
-     */
-    DemoEx8(): [number, string, string]
   }
 }
 

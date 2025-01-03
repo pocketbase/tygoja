@@ -78,6 +78,7 @@ func (g *PackageGenerator) writeFuncDecl(s *strings.Builder, decl *ast.FuncDecl,
 		case *ast.Ident:
 			recvName = recv.Name
 		case *ast.IndexExpr:
+		case *ast.IndexListExpr:
 			if v, ok := recv.X.(*ast.Ident); ok {
 				recvName = v.Name
 			}
@@ -187,7 +188,7 @@ func (g *PackageGenerator) writeTypeSpec(s *strings.Builder, ts *ast.TypeSpec, g
 			}
 
 			if len(embeds) > 0 {
-				extendTypeName = "_sub" + PseudorandomString(6)
+				extendTypeName = "_s" + PseudorandomString(6)
 
 				genericArgs := map[string]struct{}{}
 				identSB := new(strings.Builder)
