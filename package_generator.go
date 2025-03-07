@@ -10,9 +10,10 @@ import (
 
 // PackageGenerator is responsible for generating the code for a single input package.
 type PackageGenerator struct {
-	conf  *Config
-	pkg   *packages.Package
-	types []string
+	conf       *Config
+	pkg        *packages.Package
+	types      []string
+	withPkgDoc bool
 
 	generatedTypes map[string]struct{}
 	unknownTypes   map[string]struct{}
@@ -26,12 +27,16 @@ func (g *PackageGenerator) Generate() (string, error) {
 	namespace := packageNameFromPath(g.pkg.ID)
 
 	s.WriteString("\n")
-	for _, f := range g.pkg.Syntax {
-		if f.Doc == nil || len(f.Doc.List) == 0 {
-			continue
+
+	if g.withPkgDoc {
+		for _, f := range g.pkg.Syntax {
+			if f.Doc == nil || len(f.Doc.List) == 0 {
+				continue
+			}
+			g.writeCommentGroup(s, f.Doc, 0)
 		}
-		g.writeCommentGroup(s, f.Doc, 0)
 	}
+
 	g.writeStartModifier(s, 0)
 	s.WriteString("namespace ")
 	s.WriteString(namespace)

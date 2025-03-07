@@ -14,9 +14,10 @@ import (
 type Tygoja struct {
 	conf *Config
 
-	parent           *Tygoja
-	implicitPackages map[string][]string
-	generatedTypes   map[string][]string
+	parent               *Tygoja
+	implicitPackages     map[string][]string
+	generatedTypes       map[string][]string
+	generatedPackageDocs map[string]struct{}
 }
 
 // New initializes a new Tygoja generator from the specified config.
@@ -24,9 +25,10 @@ func New(config Config) *Tygoja {
 	config.InitDefaults()
 
 	return &Tygoja{
-		conf:             &config,
-		implicitPackages: map[string][]string{},
-		generatedTypes:   map[string][]string{},
+		conf:                 &config,
+		implicitPackages:     map[string][]string{},
+		generatedTypes:       map[string][]string{},
+		generatedPackageDocs: map[string]struct{}{},
 	}
 }
 
@@ -89,6 +91,7 @@ func (g *Tygoja) Generate() (string, error) {
 			conf:           g.conf,
 			pkg:            pkg,
 			types:          g.conf.Packages[pkg.ID],
+			withPkgDoc:     !g.isPackageDocGenerated(pkg.ID),
 			generatedTypes: map[string]struct{}{},
 			unknownTypes:   map[string]struct{}{},
 			imports:        map[string][]string{},
@@ -98,6 +101,8 @@ func (g *Tygoja) Generate() (string, error) {
 		if err != nil {
 			return "", err
 		}
+
+		g.generatedPackageDocs[pkg.ID] = struct{}{}
 
 		for t := range pkgGen.generatedTypes {
 			g.generatedTypes[pkg.ID] = append(g.generatedTypes[pkg.ID], t)
@@ -133,7 +138,7 @@ func (g *Tygoja) Generate() (string, error) {
 
 			for p, aliases := range pkgGen.imports {
 				for _, alias := range aliases {
-					if tName != "" && alias == tPkg && !g.isGenerated(p, tName) && !exists(g.implicitPackages[p], tName) {
+					if tName != "" && alias == tPkg && !g.isTypeGenerated(p, tName) && !exists(g.implicitPackages[p], tName) {
 						if g.implicitPackages[p] == nil {
 							g.implicitPackages[p] = []string{}
 						}
@@ -177,12 +182,21 @@ func (g *Tygoja) Generate() (string, error) {
 	return s.String(), nil
 }
 
-func (g *PackageGenerator) markAsGenerated(t string) {
-	g.generatedTypes[t] = struct{}{}
+func (g *Tygoja) isPackageDocGenerated(pkgId string) bool {
+	_, ok := g.generatedPackageDocs[pkgId]
+	if ok {
+		return true
+	}
+
+	if g.parent != nil {
+		return g.parent.isPackageDocGenerated(pkgId)
+	}
+
+	return false
 }
 
-func (g *Tygoja) isGenerated(pkg string, name string) bool {
-	if g.parent != nil && g.parent.isGenerated(pkg, name) {
+func (g *Tygoja) isTypeGenerated(pkg string, name string) bool {
+	if g.parent != nil && g.parent.isTypeGenerated(pkg, name) {
 		return true
 	}
 
@@ -214,6 +228,10 @@ func (g *PackageGenerator) isTypeAllowed(name string) bool {
 	}
 
 	return false
+}
+
+func (g *PackageGenerator) markTypeAsGenerated(t string) {
+	g.generatedTypes[t] = struct{}{}
 }
 
 var versionRegex = regexp.MustCompile(`^v\d+$`)

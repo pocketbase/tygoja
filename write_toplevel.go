@@ -38,7 +38,7 @@ func (g *PackageGenerator) writeFuncDecl(s *strings.Builder, decl *ast.FuncDecl,
 		if !g.isTypeAllowed(originalMethodName) {
 			return
 		} else {
-			g.markAsGenerated(originalMethodName)
+			g.markTypeAsGenerated(originalMethodName)
 		}
 
 		g.writeStartModifier(s, depth)
@@ -87,7 +87,7 @@ func (g *PackageGenerator) writeFuncDecl(s *strings.Builder, decl *ast.FuncDecl,
 		if !g.isTypeAllowed(recvName) {
 			return
 		} else {
-			g.markAsGenerated(recvName)
+			g.markTypeAsGenerated(recvName)
 		}
 
 		g.writeStartModifier(s, depth)
@@ -158,7 +158,7 @@ func (g *PackageGenerator) writeTypeSpec(s *strings.Builder, ts *ast.TypeSpec, g
 	if !g.isTypeAllowed(typeName) {
 		return
 	} else {
-		g.markAsGenerated(typeName)
+		g.markTypeAsGenerated(typeName)
 	}
 
 	if ts.Doc != nil {
@@ -333,7 +333,7 @@ func (g *PackageGenerator) writeValueSpec(s *strings.Builder, vs *ast.ValueSpec,
 		if !g.isTypeAllowed(name.Name) {
 			continue
 		} else {
-			g.markAsGenerated(name.Name)
+			g.markTypeAsGenerated(name.Name)
 		}
 
 		constName := name.Name
